@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trans-lateR</title>
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+    <form action="none">
+      <select name="Language" id="Lang">
+        <option value="hi">Hindi</option>
+        <option value="es">Spanish</option>
+      </select>
+      <input type="text" placeholder="Enter text here" id="text" />
+      <input type="submit" value="Submit" id="submit" />
+    </form>
+    <script>
+      var Lang = document.getElementsByTagName("select")[0];
+      var form = document.getElementsByTagName("form")[0];
+
+      var speech = window.speechSynthesis;
+      var voices = speech.getVoices();
+      // console.info(voices.length());
+
+      var utter;
+
+      var url = `https://www.gunpreetsingh.cf/Trans-lateR/Translate.php`;
+
+      // console.log(form);
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        var inputText = document.querySelector("#text");
+        // form.style.background = "red";
+        // 'sl=de&tl=en&q=Hurra.'
+        var FD = new URLSearchParams();
+        FD.append("fl", "en");
+        FD.append("tl", Lang.value);
+        FD.append("query", inputText.value);
+
+        // alert("yo");
+        var callOPt = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: FD
+        };
+
+        fetch(url, callOPt)
+          .then((response) => response.text())
+          .then((res) => {
+            console.log(res);
+            // utter = new SpeechSynthesisUtterance(res.sentences[0].trans);
+            utter = new SpeechSynthesisUtterance("Hello");
+            // utter.voice = voices[0];
+            speech.speak(utter);
+            inputText.blur();
+          });
+      });
+    </script>
+    <script>
+      import "./styles.css";
+    </script>
+  </body>
+</html>
